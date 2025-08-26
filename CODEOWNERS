@@ -1,0 +1,12 @@
+# CODEOWNERS: asigna revisores automáticos por carpeta (cuentas personales).
+# NOTAS:
+# - Usa @usuario (handle exacto de GitHub).
+# - El usuario debe tener acceso Write o superior al repo.
+# - La ÚLTIMA regla que coincide es la que aplica.
+# - Ubicaciones válidas: /.github/CODEOWNERS (recomendado), /CODEOWNERS o /docs/CODEOWNERS.
+
+/flutter/   @ALEXSTR19
+
+# Agrega estos cuando tengas los usuarios reales:
+# /flame/     @UsuarioFlame
+# /firebase/  @UsuarioFirebase
