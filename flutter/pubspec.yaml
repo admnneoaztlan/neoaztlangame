@@ -1,0 +1,33 @@
+name: neoaztlan_app
+description: Base Flutter app for NeoAztlan (Flutter + Flame + Firebase)
+version: 0.1.0+1
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.0.9
+
+  # Firebase (mínimo para arranque)
+  firebase_core: ^3.4.0
+  firebase_auth: ^5.1.4
+  cloud_firestore: ^5.4.4
+
+  # Flame integration
+  flame: ^1.15.0
+  flame_audio: ^2.10.2
+  flame_module:
+    path: ../flame  # paquete local del equipo Flame
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/sprites/
+    - assets/audio/
