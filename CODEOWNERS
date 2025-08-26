@@ -6,7 +6,5 @@
 # - Ubicaciones válidas: /.github/CODEOWNERS (recomendado), /CODEOWNERS o /docs/CODEOWNERS.
 
 /flutter/   @ALEXSTR19
-
-# Agrega estos cuando tengas los usuarios reales:
-# /flame/     @UsuarioFlame
-# /firebase/  @UsuarioFirebase
+/flame/     @Shernt07
+/firebase/  @jairteodocio
