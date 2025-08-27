@@ -1,0 +1,34 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+**/GeneratedPluginRegistrant.*
+# Xcode
+DerivedData/
+*.xcworkspace
+*.xcuserstate
+*.xcuserdatad
+# Android
+**/local.properties
+**/GeneratedPluginRegistrant.java
+# VS Code
+.vscode/
+# IntelliJ
+*.iml
+.idea/
+# Others
+.macos/
+.windows/
+.linux/
+.web/
+# By default we ignore platform folders; generate them per-branch with flutter create
+android/
+ios/
+macos/
+windows/
+linux/
+web/
