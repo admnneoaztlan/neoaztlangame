@@ -32,3 +32,6 @@ macos/
 windows/
 linux/
 web/
+# Firebase configs
+lib/database
+firebase.json
