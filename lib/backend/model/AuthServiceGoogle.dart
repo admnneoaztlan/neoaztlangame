@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:neoaztlan/database/model/rules/guardarusuario.dart';
 
 Future<UserCredential?> login() async {
   try {
@@ -16,26 +16,8 @@ Future<UserCredential?> login() async {
     final UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    final String? uid = userCredential.user?.uid;
-    if (uid != null) {
-      final DocumentReference userDocref =
-          FirebaseFirestore.instance.collection('users').doc(uid);
-      final DocumentSnapshot userSnapshot = await userDocref.get();
-      if (!userSnapshot.exists) {
-        final Map<String, int> carsinicio = {'card_001': 1};
-        await userDocref.set({
-          'nombreDeUsuario': userCredential.user?.displayName,
-          'rango': '##Pendidente##',
-          'nivel': 1,
-          'polvoArcano': 200,
-          'creationDate': FieldValue.serverTimestamp(),
-          'coleccionDeCartas': carsinicio
-        });
-        print('Nuevo usuario creado en Firestore con UID: $uid');
-      } else {
-        print(
-            'El usuario con UID: $uid ya existe en Firestore. No se sobrescribió.');
-      }
+    if (userCredential.user != null) {
+      await guardarUsuario(userCredential.user!);
     }
     return userCredential;
   } catch (e) {
