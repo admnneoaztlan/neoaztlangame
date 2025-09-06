@@ -1,11 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:neoaztlan/database/firebase_options.dart';
 import 'screens/home_screen.dart';
-import 'screens/neodex_screen.dart';
-import 'screens/play_screen.dart';
-import 'screens/community_screen.dart';
-import 'screens/shop_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(NeoaztlanApp());
 }
 
@@ -30,10 +32,6 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Widget> _screens = [
     HomeScreen(),
-    NeoDexScreen(),
-    PlayScreen(),
-    CommunityScreen(),
-    ShopScreen(),
   ];
 
   @override
