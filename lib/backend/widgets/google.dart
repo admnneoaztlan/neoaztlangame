@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neoaztlan/database/AuthServiceGoogle.dart';
 import 'package:neoaztlan/screens/community_screen.dart';
+import 'package:neoaztlan/screens/inicio.dart';
 
 class Google extends StatelessWidget {
   const Google({super.key});
@@ -16,12 +17,15 @@ class Google extends StatelessWidget {
       onTap: () async {
         final UserCredential = await login();
         if (UserCredential != null) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CommunityScreen()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Inicio()));
         }
       },
-      child: Container(
-        height: 50,
+      child: // Este es el widget del botón de Google
+          Container(
+        height: 40,
+        // Ajusta el ancho al espacio horizontal disponible
+        width: 240,
         margin: const EdgeInsets.symmetric(horizontal: 16.0),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -34,15 +38,14 @@ class Google extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                googleIconUrl,
-                height: 24,
-                width: 24,
-                // Manejo de error en caso de que la imagen no cargue.
+                'assets/Google__G__logo.svg.png',
+                height: 20,
+                width: 20,
               ),
               const SizedBox(width: 10.0),
               Text(
-                'Acceder con Google',
-                style: GoogleFonts.roboto(
+                'Sign in with Google',
+                style: TextStyle(
                   color: Colors.black,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

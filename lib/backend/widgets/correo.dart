@@ -12,7 +12,8 @@ class Correo extends StatelessWidget {
         print('Botón de Correo electrónico presionado.');
       },
       child: Container(
-        height: 50,
+        height: 40,
+        width: 200,
         margin: const EdgeInsets.symmetric(horizontal: 16.0),
         decoration: BoxDecoration(
           color: Colors.white,

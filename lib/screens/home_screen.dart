@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:neoaztlan/widgets/correo.dart';
-import 'package:neoaztlan/widgets/facebook.dart';
-import 'package:neoaztlan/widgets/google.dart';
+import 'package:neoaztlan/backend/widgets/correo.dart';
+import 'package:neoaztlan/backend/widgets/facebook.dart';
+import 'package:neoaztlan/backend/widgets/google.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,7 +11,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,9 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {},
               child: const Text('¡A construir!'),
             ),
-            Correo(),
-            Google(),
-            Facebook()
           ],
         ),
       ),

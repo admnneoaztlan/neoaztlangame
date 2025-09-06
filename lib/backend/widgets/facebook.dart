@@ -14,7 +14,8 @@ class Facebook extends StatelessWidget {
         print('Botón de Continuar con Facebook presionado.');
       },
       child: Container(
-        height: 50,
+        height: 40,
+        width: 240,
         margin: const EdgeInsets.symmetric(horizontal: 16.0),
         decoration: BoxDecoration(
           color: const Color(0xFF1877F2), // Color azul oficial de Facebook
@@ -38,7 +39,7 @@ class Facebook extends StatelessWidget {
               ),
               const SizedBox(width: 10.0),
               const Text(
-                'Continuar con Facebook',
+                'Login with Facebook',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
