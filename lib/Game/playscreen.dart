@@ -36,7 +36,7 @@ class Playscreen extends FlameGame {
     final isPortrait = size.y > size.x;
 
      if (isPortrait) {
-      // Vertical
+      // Horizontal
       //Medira 3/8
       zona1.position = Vector2(0, 0);
       zona1.size = Vector2(size.x,3*size.y/8);
@@ -47,7 +47,7 @@ class Playscreen extends FlameGame {
       zona3.position = Vector2(0, zona1.size.y+zona2.size.y);
       zona3.size = Vector2(size.x,3*size.y/8);
     } else {
-      // Horizontal con las mismas medidas
+      // Vertical con las mismas medidas
       zona1.position = Vector2(0, 0);
       zona1.size = Vector2(3*size.x/8, size.y);
 
