@@ -6,16 +6,14 @@ class Carta extends PositionComponent {
   bool get debugMode => true;
 
   Carta({
-    Vector2? position, // <-- ya no es required
+    Vector2? position,
     Vector2? size,
     Color color = Colors.white,
     String? label,
   }) : super(
-          position: position ??
-              Vector2.zero(), // <-- si no pasas nada, inicia en (0,0)
+          position: position ?? Vector2.zero(),
           size: size,
         ) {
-    // Agregar un rectángulo dentro de la carta
     add(RectangleComponent(
       size: size,
       paint: Paint()..color = color,
