@@ -5,12 +5,8 @@ import 'package:flutter/material.dart';
 final cartaSize = Vector2(60, 90);
 
 class Carta extends PositionComponent {
-  // CLAVE 1: Hacemos 'colorFrente' opcional y le damos un valor por defecto (Gris).
   final Color colorFrente;
-  // CLAVE 2: Hacemos 'reversoPath' opcional.
   final String reversoPath;
-
-  // true: Muestra el color/imagen del frente.
   bool mostrandoFrente = false;
 
   late final Paint frentePaint;
@@ -18,7 +14,6 @@ class Carta extends PositionComponent {
   // Variable para almacenar el Sprite cargado.
   Sprite? reversoSprite;
 
-  // Constructor de la clase base Carta.
   Carta({
     // Parámetros opcionales con valores por defecto para compatibilidad
     this.colorFrente = Colors.grey,
@@ -34,7 +29,6 @@ class Carta extends PositionComponent {
   }
 
   @override
-  // onLoad se ejecuta al inicio y es asíncrono, ideal para cargar assets (imágenes).
   Future<void> onLoad() async {
     // Solo intentamos cargar si el path no es el valor por defecto.
     if (reversoPath != 'default_reverso.png') {
@@ -55,7 +49,6 @@ class Carta extends PositionComponent {
   }
 
   @override
-  // render se llama en cada cuadro de la animación para dibujar la carta.
   void render(Canvas canvas) {
     // Si está de frente (true), dibuja el rectángulo de color sólido.
     if (mostrandoFrente) {
@@ -63,25 +56,15 @@ class Carta extends PositionComponent {
     }
     // Si está de reverso (false)
     else {
-      // Dibujamos el Sprite directamente (si existe).
       if (reversoSprite != null) {
-        // ***** CORRECCIÓN PARA EL ESTIRAMIENTO DE PANTALLA *****
-        // Usamos el método render de Sprite con un destRect (destino)
-        // que mantiene la relación de aspecto original de la imagen.
         reversoSprite!.render(
           canvas,
           size: size,
-          overridePaint:
-              frentePaint, // Opcional: Esto permite que el Paint afecte al sprite (por si quieres filtros)
+          overridePaint: frentePaint,
         );
-
-        // El estiramiento se resuelve con cómo Flame dibuja internamente
-        // cuando se le da solo el size, ya que respeta la relación de aspecto de la fuente (src).
-        // Si el problema persiste, es probable que la imagen en sí ya esté estirada.
       }
       // Si el Sprite es nulo (no se cargó o es la carta por defecto), dibujamos un color.
       else {
-        // Usamos el color de frente como un color de relleno seguro (Gris por defecto).
         canvas.drawRect(this.size.toRect(), frentePaint);
       }
     }

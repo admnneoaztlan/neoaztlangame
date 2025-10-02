@@ -38,15 +38,12 @@ class ZonaOponente extends PositionComponent {
   Future<void> onLoad() async {
     super.onLoad();
 
-    // La inicialización se hace solo una vez
     _inicializarElementos();
     // El reacomodo se hace al final para aplicar posiciones y tamaños correctos.
     reacomodar();
   }
 
   void _inicializarElementos() {
-    // Inicialización de componentes (sin tamaños ni posiciones finales)
-
     // === AVATAR ===
     avatar = RectangleComponent(paint: Paint()..color = Colors.deepPurple);
     add(avatar);
@@ -126,19 +123,11 @@ class ZonaOponente extends PositionComponent {
     final zonaW = size.x;
     final zonaH = size.y;
 
-    // ********* CLAVE DE LA CORRECCIÓN *********
-    // 1. Establecemos el alto de la carta como el 20% del alto de la zona.
     final cardH = zonaH * 0.20;
-    // 2. Calculamos el ancho basado en la proporción 2:3 para EVITAR el estiramiento.
+
     const double cardAspectRatio = 2 / 3;
     final cardW = cardH * cardAspectRatio;
 
-    // **NOTA:** Las posiciones y tamaños de los rectángulos principales
-    // (Avatar, ZonaArtefactos) siguen usando los porcentajes originales
-    // para no mover el diseño de tus compañeros.
-    // *****************************************
-
-    // Ajustes de fuente
     final textFontSizeH = 0.06 * zonaH;
     final textFontSizeV = 0.08 * zonaH;
     final textFontSizeSmall = 0.02 * zonaH;
