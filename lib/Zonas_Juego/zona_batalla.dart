@@ -33,14 +33,14 @@ class ZonaBatalla extends PositionComponent {
         final carta = cartas[i];
         final y = espacio * (i + 1) + cartaHeight * i;
         final x = size.x/2 + (size.x - cartaWidth) / 8;
-        carta.position = Vector2(x, y);
+        carta.position = Vector2(x + cartaWidth / 2, y + cartaHeight / 2);
       }
       //oponente
       for (int i = 4; i < 8; i++) {
         final carta = cartas[i];
         final y = espacio * (i-3) + cartaHeight * (i-4);
         final x = (size.x - cartaWidth) / 8;
-        carta.position = Vector2(x, y);
+        carta.position = Vector2(x + cartaWidth / 2, y + cartaHeight / 2);
       }
     } else {
       // Vertical
@@ -52,14 +52,14 @@ class ZonaBatalla extends PositionComponent {
         final carta = cartas[i];
         final x = espacio * (i + 1) + cartaWidth * i;
         final y = size.y/2 + (size.y - cartaHeight) / 8;
-        carta.position = Vector2(x, y);
+        carta.position = Vector2(x + cartaWidth / 2, y + cartaHeight / 2);
       }
       //oponente
       for (int i = 4; i < 8; i++) {
         final carta = cartas[i];
         final x = espacio * (i-3) + cartaWidth * (i-4);
         final y =(size.y - cartaHeight) / 8;
-        carta.position = Vector2(x, y);
+        carta.position = Vector2(x + cartaWidth / 2, y + cartaHeight / 2);
       }
     }
 

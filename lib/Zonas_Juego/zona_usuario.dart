@@ -1,9 +1,11 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:neoaztlan/Componentes/carta.dart';
+import 'package:neoaztlan/Componentes/avatar.dart';
+
 
 class ZonaUsuario extends PositionComponent {
-  RectangleComponent avatar = RectangleComponent();
+  PositionComponent avatar = Avatar();
   TextComponent avatarText = TextComponent();
   TextComponent vidaText = TextComponent();
 
@@ -25,6 +27,22 @@ class ZonaUsuario extends PositionComponent {
 
   ZonaUsuario() : super(position: Vector2.zero(), size: Vector2(800, 600));
 
+  // Función auxiliar: Crea una carta de un tipo específico
+  Carta _crearCartaAleatoria(int index, Vector2? posicion) {
+    switch (index % 4) {
+      case 0:
+        return CartaGuerrero(position: posicion);
+      case 1:
+        return CartaMito(position: posicion);
+      case 2:
+        return CartaLeyenda(position: posicion);
+      case 3:
+        return CartaDios(position: posicion);
+      default:
+        return CartaGuerrero(position: posicion);
+    }
+  }
+
   // CARGA INICIAL
   @override
   Future<void> onLoad() async {
@@ -38,6 +56,7 @@ class ZonaUsuario extends PositionComponent {
   }
 
   @override
+  // ignore: avoid_renaming_method_parameters
   void onGameResize(Vector2 newSize) {
     super.onGameResize(newSize);
     size = newSize;
@@ -46,10 +65,7 @@ class ZonaUsuario extends PositionComponent {
 
   // CONFIGURACIÓN DE ELEMENTOS
   void _configurarAvatar() {
-    avatar = RectangleComponent(
-      size: Vector2(size.x * 0.20, size.y * 0.25),
-      paint: Paint()..color = Colors.deepPurple,
-    );
+    avatar = Avatar();
     add(avatar);
 
     avatarText =
@@ -75,12 +91,10 @@ class ZonaUsuario extends PositionComponent {
 
   void _configurarMazo() {
     mazo.clear();
-    final colores = [Colors.cyan, Colors.purple, Colors.red, Colors.brown];
-    for (final color in colores) {
-      final carta = Carta(
-          size: Vector2(size.x * 0.12, size.y * 0.20), colorFrente: color);
-      mazo.add(carta);
-      add(carta);
+    for (int i = 0; i < 4; i++) {
+      final mazoCarta = _crearCartaAleatoria(i, Vector2.zero());
+      mazo.add(mazoCarta);
+      add(mazoCarta);
     }
     mazoText = _crearTexto('MAZO (${mazo.length} CARTAS)', 0.03 * size.y,
         Colors.white, Anchor.topLeft);
@@ -93,12 +107,11 @@ class ZonaUsuario extends PositionComponent {
 
   void _configurarCementerio() {
     cementerio.clear();
-    final colores = [Colors.cyan, Colors.purple, Colors.red, Colors.brown];
-    for (final color in colores) {
-      final carta = Carta(
-          size: Vector2(size.x * 0.12, size.y * 0.20), colorFrente: color);
-      cementerio.add(carta);
-      add(carta);
+    for (int i = 0; i < 4; i++) {
+      final cementerioCarta = _crearCartaAleatoria(i + 4, Vector2.zero());
+      cementerioCarta.voltear(); // Voltear para que muestre el color
+      cementerio.add(cementerioCarta);
+      add(cementerioCarta);
     }
     cementerioText =
         _crearTexto('CEMENTERIO', 0.03 * size.y, Colors.white, Anchor.topLeft);
@@ -107,18 +120,11 @@ class ZonaUsuario extends PositionComponent {
 
   void _configurarMano() {
     mano.clear();
-    final colores = [
-      Colors.orange,
-      Colors.yellow,
-      Colors.lightGreen,
-      Colors.pink,
-      Colors.teal
-    ];
-    for (final color in colores) {
-      final carta = Carta(
-          size: Vector2(size.x * 0.10, size.y * 0.18), colorFrente: color);
-      mano.add(carta);
-      add(carta);
+    for (int i = 0; i < 4; i++) {
+      final manoCarta = _crearCartaAleatoria(i, Vector2.zero());
+      manoCarta.voltear();
+      mano.add(manoCarta);
+      add(manoCarta);
     }
     manoText = _crearTexto('MANO (${mano.length} CARTAS)', 0.03 * size.y,
         Colors.white, Anchor.topLeft);
@@ -139,10 +145,10 @@ class ZonaUsuario extends PositionComponent {
         esHorizontal ? zonaH * 0.40 : zonaH * 0.35, zonaW * 0.40, zonaH * 0.20);
 
     final mazoArea =
-        Rect.fromLTWH(zonaW * 0.60, zonaH * 0.10, zonaW * 0.30, zonaH * 0.25);
+        Rect.fromLTWH(zonaW * 0.60, zonaH * 0.50, zonaW * 0.10, zonaH * 0.2);
 
-    final cementerioArea = Rect.fromLTWH(zonaW * 0.60,
-        esHorizontal ? zonaH * 0.45 : zonaH * 0.55, zonaW * 0.30, zonaH * 0.25);
+    final cementerioArea = Rect.fromLTWH(zonaW * 0.20,
+        esHorizontal ? zonaH * 0.45 : zonaH * 0.1, zonaW * 0.30, zonaH * 0.25);
 
     final manoArea =
         Rect.fromLTWH(zonaW * 0.15, zonaH * 0.80, zonaW * 0.70, zonaH * 0.18);

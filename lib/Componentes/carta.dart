@@ -5,18 +5,21 @@ import 'package:flutter/material.dart';
 final cartaSize = Vector2(60, 90);
 
 class Carta extends PositionComponent {
-  final Color colorFrente;
+  final String colorFrente;
   final String reversoPath;
   bool mostrandoFrente = false;
 
-  late final Paint frentePaint;
+  
+  late final Paint paint;
 
   // Variable para almacenar el Sprite cargado.
   Sprite? reversoSprite;
+  Sprite? frentePaint;
+  
 
   Carta({
     // Parámetros opcionales con valores por defecto para compatibilidad
-    this.colorFrente = Colors.grey,
+    this.colorFrente = 'default_frente.png',
     this.reversoPath = 'default_reverso.png',
     Vector2? size,
     Vector2? position,
@@ -25,7 +28,7 @@ class Carta extends PositionComponent {
           size: size ?? cartaSize,
           anchor: Anchor.center,
         ) {
-    frentePaint = Paint()..color = colorFrente;
+    paint = Paint()..color = Colors.grey;
   }
 
   @override
@@ -40,6 +43,17 @@ class Carta extends PositionComponent {
         print('ERROR al cargar el asset de la carta: $reversoPath. $e');
       }
     }
+
+    if (colorFrente != 'default_frente.png') {
+      try {
+        // Carga la imagen y la guarda en la variable 'reversoSprite'
+        frentePaint = await Sprite.load('cartas/$colorFrente');
+      } catch (e) {
+        // Si hay un error de carga (path incorrecto), solo imprime y no crashea
+        print('ERROR al cargar el asset de la carta: $colorFrente. $e');
+      }
+    }
+
     return super.onLoad();
   }
 
@@ -52,7 +66,16 @@ class Carta extends PositionComponent {
   void render(Canvas canvas) {
     // Si está de frente (true), dibuja el rectángulo de color sólido.
     if (mostrandoFrente) {
-      canvas.drawRect(this.size.toRect(), frentePaint);
+      if (frentePaint != null) {
+        frentePaint!.render(
+          canvas,
+          size: size,
+          overridePaint: paint,
+        );
+      }
+      else {
+        canvas.drawRect(size.toRect(), paint);
+      }
     }
     // Si está de reverso (false)
     else {
@@ -60,12 +83,12 @@ class Carta extends PositionComponent {
         reversoSprite!.render(
           canvas,
           size: size,
-          overridePaint: frentePaint,
+          overridePaint: paint,
         );
       }
       // Si el Sprite es nulo (no se cargó o es la carta por defecto), dibujamos un color.
       else {
-        canvas.drawRect(this.size.toRect(), frentePaint);
+        canvas.drawRect(size.toRect(), paint);
       }
     }
   }
@@ -77,37 +100,33 @@ class Carta extends PositionComponent {
 // No hay cambios en la sintaxis aquí, siguen siendo fáciles de entender.
 
 class CartaGuerrero extends Carta {
-  CartaGuerrero({Vector2? position})
+  CartaGuerrero({super.position})
       : super(
-          position: position,
-          colorFrente: Colors.red,
+          colorFrente: 'marco_guerrero.png',
           reversoPath: 'carta_guerrero.png',
         );
 }
 
 class CartaMito extends Carta {
-  CartaMito({Vector2? position})
+  CartaMito({super.position})
       : super(
-          position: position,
-          colorFrente: Colors.green,
+          colorFrente: 'marco_mito.png',
           reversoPath: 'carta_mito.png',
         );
 }
 
 class CartaLeyenda extends Carta {
-  CartaLeyenda({Vector2? position})
+  CartaLeyenda({super.position})
       : super(
-          position: position,
-          colorFrente: Colors.yellow,
+          colorFrente: 'marco_leyenda.png',
           reversoPath: 'carta_leyenda.png',
         );
 }
 
 class CartaDios extends Carta {
-  CartaDios({Vector2? position})
+  CartaDios({super.position})
       : super(
-          position: position,
-          colorFrente: Colors.blue,
+          colorFrente: 'marco_dios.png',
           reversoPath: 'carta_dios.png',
         );
 }

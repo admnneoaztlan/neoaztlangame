@@ -51,14 +51,14 @@ class ZonaOponente extends PositionComponent {
     avatarText = TextComponent(
       text: 'AVATAR',
       anchor: Anchor.center,
-      textRenderer: TextPaint(style: TextStyle(color: Colors.white)),
+      textRenderer: TextPaint(style: const TextStyle(color: Colors.white)),
     );
     add(avatarText);
 
     vidaText = TextComponent(
       text: 'VIDA 30/30',
       anchor: Anchor.topCenter,
-      textRenderer: TextPaint(style: TextStyle(color: Colors.red)),
+      textRenderer: TextPaint(style: const TextStyle(color: Colors.red)),
     );
     add(vidaText);
 
@@ -70,7 +70,7 @@ class ZonaOponente extends PositionComponent {
     zonaArtefactosText = TextComponent(
       text: 'ZONA DE ARTEFACTOS',
       anchor: Anchor.center,
-      textRenderer: TextPaint(style: TextStyle(color: Colors.cyan)),
+      textRenderer: TextPaint(style: const TextStyle(color: Colors.cyan)),
     );
     add(zonaArtefactosText);
 
@@ -85,14 +85,14 @@ class ZonaOponente extends PositionComponent {
     mazoText = TextComponent(
       text: 'MAZO ENEMIGO (22 CARTAS)',
       anchor: Anchor.topLeft,
-      textRenderer: TextPaint(style: TextStyle(color: Colors.white)),
+      textRenderer: TextPaint(style: const TextStyle(color: Colors.white)),
     );
     add(mazoText);
 
     quedanCartasText = TextComponent(
       text: "QUEDAN 'N' cartas",
       anchor: Anchor.topLeft,
-      textRenderer: TextPaint(style: TextStyle(color: Colors.white)),
+      textRenderer: TextPaint(style: const TextStyle(color: Colors.white)),
     );
     add(quedanCartasText);
 
@@ -108,7 +108,7 @@ class ZonaOponente extends PositionComponent {
     cementerioText = TextComponent(
       text: 'CEMENTERIO ENEMIGO',
       anchor: Anchor.topLeft,
-      textRenderer: TextPaint(style: TextStyle(color: Colors.white)),
+      textRenderer: TextPaint(style: const TextStyle(color: Colors.white)),
     );
     add(cementerioText);
   }
