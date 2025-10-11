@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 // ==========================================================
-// 🔹 VARIABLES GLOBALES (SIMULACIÓN DE BASE DE DATOS)
-//    Se asume que estas variables son globales y actualizan el Overlay
+//  VARIABLES GLOBALES
+//
 // ==========================================================
 String nombreJugador = 'Jugador 1';
 String avatarJugador = 'avatar_default.png';
@@ -10,8 +10,11 @@ String correoJugador = 'correo@ejemplo.com';
 String contrasenaJugador = '123456';
 String nacionalidadJugador = 'México';
 bool cuentaEliminada = false;
-bool notificacionesActivas = true; //
+bool notificacionesActivas = true;
 // ==========================================================
+
+//  Este mapa guarda los valores ANTERIORES al editarse .
+Map<String, dynamic> _valoresIniciales = {};
 
 /// Widget principal
 class InformacionPerfil extends StatefulWidget {
@@ -29,8 +32,9 @@ class _InformacionPerfilState extends State<InformacionPerfil> {
   late TextEditingController _contrasenaController;
   late TextEditingController _nacionalidadController;
 
-  // Variable local para manejar el estado del Switch
+  // Variable local para manejar el estado del Switch y de la cuenta.
   late bool _notificacionesActivasLocal;
+  late bool _cuentaEliminadaLocal; // Para mostrar el estado en el botón
 
   // Creamos un controlador de scroll
   final ScrollController _scrollController = ScrollController();
@@ -38,14 +42,37 @@ class _InformacionPerfilState extends State<InformacionPerfil> {
   @override
   void initState() {
     super.initState();
-    // Inicializamos con los valores actuales (globales)
+
+    //  Almacenar los valores INICIALES al abrir el formulario
+    _valoresIniciales = {
+      'nombre': nombreJugador,
+      'avatar': avatarJugador,
+      'correo': correoJugador,
+      'contrasena': contrasenaJugador,
+      'nacionalidad': nacionalidadJugador,
+      'notificaciones': notificacionesActivas,
+      'eliminada': cuentaEliminada,
+    };
+
+    // Inicializamos controladores con los valores actuales (globales)
     _nombreController = TextEditingController(text: nombreJugador);
     _avatarController = TextEditingController(text: avatarJugador);
     _correoController = TextEditingController(text: correoJugador);
     _contrasenaController = TextEditingController(text: contrasenaJugador);
     _nacionalidadController = TextEditingController(text: nacionalidadJugador);
 
+    // Inicializamos variables locales para los Toggles
     _notificacionesActivasLocal = notificacionesActivas;
+    _cuentaEliminadaLocal = cuentaEliminada;
+
+    //  Añadir listeners AQUI (solo una vez)
+    // Esto obliga a llamar a setState() cada vez que el texto cambia,
+    // actualizando el mensaje de "Valor anterior" en tiempo real.
+    _nombreController.addListener(() => setState(() {}));
+    _avatarController.addListener(() => setState(() {}));
+    _correoController.addListener(() => setState(() {}));
+    _contrasenaController.addListener(() => setState(() {}));
+    _nacionalidadController.addListener(() => setState(() {}));
   }
 
   @override
@@ -74,13 +101,14 @@ class _InformacionPerfilState extends State<InformacionPerfil> {
       child: Scrollbar(
         controller: _scrollController,
         thumbVisibility: true,
-        thickness: 8.0,
-        radius: const Radius.circular(10), // Bordes redondeados
+        thickness: 6.0, // Scrollbar más delgado pero visible
+        radius: const Radius.circular(10),
         trackVisibility: true,
         scrollbarOrientation: ScrollbarOrientation.right,
 
         child: SingleChildScrollView(
           controller: _scrollController,
+          // Padding interno para que el scrollbar no se pegue al texto
           padding: const EdgeInsets.only(right: 18.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -96,20 +124,21 @@ class _InformacionPerfilState extends State<InformacionPerfil> {
               const SizedBox(height: 20),
 
               // --- CAMPOS DE EDICIÓN ---
-              _campo('Nombre', 'Escribe tu nombre', _nombreController),
-              const SizedBox(height: 10),
-              _campo('Avatar', 'Nombre del avatar', _avatarController),
-              const SizedBox(height: 10),
-              _campo('Correo', 'ejemplo@correo.com', _correoController),
-              const SizedBox(height: 10),
-              _campo('Contraseña', '******', _contrasenaController,
+              _campo(
+                  'Nombre', 'Escribe tu nombre', _nombreController, 'nombre'),
+              _campo(
+                  'Avatar', 'Nombre del avatar', _avatarController, 'avatar'),
+              _campo(
+                  'Correo', 'ejemplo@correo.com', _correoController, 'correo'),
+              _campo(
+                  'Contraseña', '******', _contrasenaController, 'contrasena',
                   obscure: true),
-              const SizedBox(height: 10),
-              _campo('Nacionalidad', 'País de origen', _nacionalidadController),
+              _campo('Nacionalidad', 'País de origen', _nacionalidadController,
+                  'nacionalidad'),
 
               const SizedBox(height: 25),
 
-              //  APARTADO: Notificaciones (Switch)
+              // APARTADO: Notificaciones
               _seccionNotificaciones(),
               const SizedBox(height: 15),
 
@@ -117,7 +146,7 @@ class _InformacionPerfilState extends State<InformacionPerfil> {
               _seccionTerminos(context),
               const SizedBox(height: 25),
 
-              // --- BOTÓN GUARDAR (Visible con el scroll) ---
+              // --- BOTÓN GUARDAR ---
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.cyanAccent.withOpacity(0.4),
@@ -127,18 +156,17 @@ class _InformacionPerfilState extends State<InformacionPerfil> {
                   ),
                 ),
                 onPressed: () {
-                  // Lógica de Guardado
+                  // Lógica de Guardado: Actualiza las variables globales
                   setState(() {
                     nombreJugador = _nombreController.text;
                     avatarJugador = _avatarController.text;
                     correoJugador = _correoController.text;
                     contrasenaJugador = _contrasenaController.text;
                     nacionalidadJugador = _nacionalidadController.text;
-                    notificacionesActivas =
-                        _notificacionesActivasLocal; // Actualiza global
+                    notificacionesActivas = _notificacionesActivasLocal;
                   });
 
-                  Navigator.of(context).pop(); //  Cierra el diálogo
+                  Navigator.of(context).pop(); // Cierra el diálogo
                 },
                 child: const Text('Guardar'),
               ),
@@ -146,59 +174,9 @@ class _InformacionPerfilState extends State<InformacionPerfil> {
               const SizedBox(height: 15),
 
               //  BOTÓN Dar de Baja Cuenta
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red.withOpacity(0.3),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onPressed: () {
-                  //  Lógica de Advertencia y Eliminación
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      backgroundColor: Colors.black87,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      title: const Text(
-                        "Advertencia de Eliminación",
-                        style: TextStyle(color: Colors.redAccent),
-                      ),
-                      content: const Text(
-                        "Al dar de baja tu cuenta, enfrentarás una pérdida de datos "
-                        "permanente y no habrá reembolso de items pagados. ¿Deseas continuar?",
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            // Simulación de eliminación si el usuario confirma
-                            setState(() {
-                              cuentaEliminada = true;
-                            });
-                            Navigator.of(context)
-                                .pop(); // Cierra el AlertDialog
-                            Navigator.of(context)
-                                .pop(); // Cierra el InformacionPerfil Dialog
-                          },
-                          child: const Text("Sí, Dar de Baja",
-                              style: TextStyle(color: Colors.redAccent)),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text("Cancelar",
-                              style: TextStyle(color: Colors.cyanAccent)),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                child: const Text('Dar de Baja Cuenta'),
-              ),
+              _seccionEliminarCuenta(context),
 
-              const SizedBox(height: 50),
+              const SizedBox(height: 50), // Espacio extra para el scroll final
             ],
           ),
         ),
@@ -208,29 +186,50 @@ class _InformacionPerfilState extends State<InformacionPerfil> {
 
   // --- HELPERS (Funciones de Soporte) ---
 
-  // Switch de Notificaciones
+  //  Sección de Notificaciones
   Widget _seccionNotificaciones() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final original = _valoresIniciales['notificaciones'] as bool;
+    final estadoOriginal = original ? 'Activas' : 'Inactivas';
+    final estadoActual = _notificacionesActivasLocal ? 'Activas' : 'Inactivas';
+    final isChanged = original != _notificacionesActivasLocal;
+
+    return Column(
       children: [
-        const Text(
-          'Notificaciones Activas',
-          style: TextStyle(color: Colors.white, fontSize: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Notificaciones Activas',
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
+            Switch(
+              value: _notificacionesActivasLocal,
+              activeColor: Colors.cyanAccent,
+              onChanged: (bool value) {
+                setState(() {
+                  _notificacionesActivasLocal = value;
+                });
+              },
+            ),
+          ],
         ),
-        Switch(
-          value: _notificacionesActivasLocal,
-          activeColor: Colors.cyanAccent,
-          onChanged: (bool value) {
-            setState(() {
-              _notificacionesActivasLocal = value;
-            });
-          },
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+          child: Text(
+            isChanged
+                ? 'Original: $estadoOriginal'
+                : 'Estado: $estadoActual (Sin cambios)',
+            style: TextStyle(
+              color: isChanged ? Colors.yellow.shade200 : Colors.white54,
+              fontSize: 12,
+            ),
+          ),
         ),
       ],
     );
   }
 
-  //  Botón de Términos y condiciones
+  // Botón de Términos
   Widget _seccionTerminos(BuildContext context) {
     return TextButton(
       onPressed: () {
@@ -267,29 +266,121 @@ class _InformacionPerfilState extends State<InformacionPerfil> {
     );
   }
 
-  ///  Campo reutilizable
+  //  Sección Eliminar Cuenta
+  Widget _seccionEliminarCuenta(BuildContext context) {
+    final original = _valoresIniciales['eliminada'] as bool;
+    final estadoOriginal = original ? 'Sí (Eliminada)' : 'No (Activa)';
+    final isChanged = original != _cuentaEliminadaLocal;
+
+    return Column(
+      children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red.withOpacity(0.3),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          onPressed: () {
+            // Lógica de Advertencia y Eliminación
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                backgroundColor: Colors.black87,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                title: const Text(
+                  "Advertencia de Eliminación",
+                  style: TextStyle(color: Colors.redAccent),
+                ),
+                content: const Text(
+                  "Al dar de baja tu cuenta, enfrentarás una pérdida de datos "
+                  "permanente y no habrá reembolso de items pagados. ¿Deseas continuar?",
+                  style: TextStyle(color: Colors.white70),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      // Simulación de eliminación si el usuario confirma
+                      setState(() {
+                        _cuentaEliminadaLocal = true;
+                      });
+                      Navigator.of(context).pop(); // Cierra el AlertDialog
+                    },
+                    child: const Text("Sí, Dar de Baja",
+                        style: TextStyle(color: Colors.redAccent)),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancelar",
+                        style: TextStyle(color: Colors.cyanAccent)),
+                  ),
+                ],
+              ),
+            );
+          },
+          child: const Text('Dar de Baja Cuenta'),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+          child: Text(
+            'Estado anterior: $estadoOriginal. Modificación: ${isChanged ? 'Dada de baja' : 'Ninguna'}',
+            style: TextStyle(
+              color: isChanged ? Colors.yellow.shade200 : Colors.white54,
+              fontSize: 12,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Campo reutilizable
   Widget _campo(String label, String hint, TextEditingController controller,
+      String key, // Parámetro 'key' para buscar en el mapa inicial
       {bool obscure = false}) {
-    return TextField(
-      controller: controller,
-      obscureText: obscure,
-      keyboardType:
-          label == 'Nivel' ? TextInputType.number : TextInputType.text,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.cyanAccent),
-        hintText: hint,
-        hintStyle: const TextStyle(color: Colors.white38),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.cyanAccent),
-          borderRadius: BorderRadius.circular(10),
+    // Obtener el valor original del mapa
+    final valorOriginal = _valoresIniciales[key] ?? '';
+    final isEdited =
+        valorOriginal != controller.text; // Comprobar si fue editado
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: controller,
+          obscureText: obscure,
+          keyboardType: TextInputType.text,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(color: Colors.cyanAccent),
+            hintText: hint,
+            hintStyle: const TextStyle(color: Colors.white38),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.cyanAccent),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide:
+                  const BorderSide(color: Colors.cyanAccent, width: 1.5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.cyanAccent, width: 1.5),
-          borderRadius: BorderRadius.circular(10),
+        // 💡 Mostrar el valor anterior
+        Padding(
+          padding: const EdgeInsets.only(left: 12.0, top: 4.0, bottom: 8.0),
+          child: Text(
+            isEdited ? 'Valor anterior: $valorOriginal' : 'Valor actual.',
+            style: TextStyle(
+              color: isEdited ? Colors.yellow.shade200 : Colors.white54,
+              fontSize: 12,
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:neoaztlan/UI/informacion_perfil.dart'; 
+import 'package:neoaztlan/UI/informacion_perfil.dart';
 
-class PerfilOverlay extends StatelessWidget {
+// Importamos tus variables globales para que este archivo pueda leerlas.
+// Esto asume que el archivo informacion_perfil.dart ya define las variables globales (nombreJugador, avatarJugador, etc.)
+// y que son las mismas que se usan en main.dart.
+
+class PerfilOverlay extends StatefulWidget {
   final VoidCallback onClose;
 
-  // Variables dinámicas del jugador
+  // Las variables originales de tu compañero, ahora inmutables.
   final String titulo;
   final String nombre;
   final String avatarNombre;
@@ -27,10 +31,44 @@ class PerfilOverlay extends StatelessWidget {
     required this.tasaVictoria,
   });
 
+  // CLAVE 1: Cambiar de StatelessWidget a StatefulWidget
+  @override
+  State<PerfilOverlay> createState() => _PerfilOverlayState();
+}
+
+class _PerfilOverlayState extends State<PerfilOverlay> {
+  // Variables locales que usaremos para mostrar los datos.
+  // Las inicializamos con los valores que nos pasa el widget, pero luego leerán las globales.
+  late String _nombre;
+  late String _avatarNombre;
+  // Solo incluimos las variables que el usuario puede editar.
+
+  @override
+  void initState() {
+    super.initState();
+    // CLAVE 2: Inicializar las variables leyendo la memoria global.
+    // Esto asegura que al inicio, tiene el último valor conocido.
+    _nombre = nombreJugador;
+    _avatarNombre = avatarJugador;
+  }
+
+  // CLAVE 3: Esta función se llama justo antes de que el Dialog se cierre.
+  // Su único propósito es forzar el redibujado de este Overlay.
+  void _forzarActualizacion() {
+    setState(() {
+      // Al llamar a setState(), Flutter sabe que debe reconstruir el widget.
+      // Ahora, _nombre y _avatarNombre leerán las variables globales *actualizadas* de nuevo.
+      _nombre = nombreJugador;
+      _avatarNombre = avatarJugador;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Usamos las variables de estado (_nombre, _avatarNombre, etc.)
+    // Los valores que no cambian (nivel, titulo, gemas) siguen usando widget.<nombre>
     return GestureDetector(
-      onTap: onClose,
+      onTap: widget.onClose,
       child: Container(
         // ignore: deprecated_member_use
         color: Colors.black.withOpacity(0.8),
@@ -60,7 +98,7 @@ class PerfilOverlay extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        titulo,
+                        widget.titulo,
                         style: const TextStyle(
                           fontSize: 22,
                           color: Colors.white,
@@ -73,7 +111,7 @@ class PerfilOverlay extends StatelessWidget {
                         // ignore: deprecated_member_use
                         backgroundColor: Colors.cyanAccent.withOpacity(0.3),
                         child: Text(
-                          avatarNombre,
+                          _avatarNombre, // <-- Usa la variable de estado
                           style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -82,7 +120,7 @@ class PerfilOverlay extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        nombre,
+                        _nombre, // <-- Usa la variable de estado
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -90,28 +128,28 @@ class PerfilOverlay extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Nivel $nivel',
-                        style:
-                            const TextStyle(color: Colors.white70, fontSize: 18),
+                        'Nivel ${widget.nivel}', // <-- Usa el valor original
+                        style: const TextStyle(
+                            color: Colors.white70, fontSize: 18),
                       ),
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _infoBox('💎', gemas.toString()),
+                          _infoBox('💎', widget.gemas.toString()),
                           const SizedBox(width: 40),
-                          _infoBox('⭐', estrellas.toString()),
+                          _infoBox('⭐', widget.estrellas.toString()),
                         ],
                       ),
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _statBox('$victorias\nVictorias',
+                          _statBox('${widget.victorias}\nVictorias',
                               const Color(0xFF00B3B3)),
                           const SizedBox(width: 20),
                           _statBox(
-                              '${tasaVictoria.toStringAsFixed(0)}%\nTasa Victoria',
+                              '${widget.tasaVictoria.toStringAsFixed(0)}%\nTasa Victoria',
                               const Color(0xFFB3B300)),
                         ],
                       ),
@@ -123,7 +161,7 @@ class PerfilOverlay extends StatelessWidget {
                     ],
                   ),
 
-                  //  Botón de editar 
+                  // Botón de editar
                   Positioned(
                     bottom: 0,
                     right: 0,
@@ -139,11 +177,15 @@ class PerfilOverlay extends StatelessWidget {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (context) => const Dialog(
+                          builder: (context) => Dialog(
                             backgroundColor: Colors.transparent,
+                            // CLAVE 4: Ejecuta la función de actualización DESPUÉS de cerrar tu formulario.
                             child: InformacionPerfil(),
                           ),
-                        );
+                        ).then((_) {
+                          // El .then() espera a que el Dialog se cierre.
+                          _forzarActualizacion();
+                        });
                       },
                       icon: const Icon(Icons.edit, size: 18),
                       label: const Text(
@@ -188,4 +230,3 @@ class PerfilOverlay extends StatelessWidget {
     );
   }
 }
-
