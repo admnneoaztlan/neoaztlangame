@@ -19,7 +19,7 @@ void main() {
                   titulo: 'Guardián estelar',
                   nombre: nombreJugador,
                   avatarNombre: avatarJugador,
-                  nivel: nivelJugador,
+                  nivel: 10,
                   gemas: 350,
                   estrellas: 2000,
                   victorias: 1247,
