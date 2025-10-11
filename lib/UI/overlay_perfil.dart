@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:neoaztlan/UI/informacion_perfil.dart';
 
-// Importamos tus variables globales para que este archivo pueda leerlas.
-// Esto asume que el archivo informacion_perfil.dart ya define las variables globales (nombreJugador, avatarJugador, etc.)
-// y que son las mismas que se usan en main.dart.
-
 class PerfilOverlay extends StatefulWidget {
   final VoidCallback onClose;
 
-  // Las variables originales de tu compañero, ahora inmutables.
+  // Las variables originales
   final String titulo;
   final String nombre;
   final String avatarNombre;
@@ -31,28 +27,24 @@ class PerfilOverlay extends StatefulWidget {
     required this.tasaVictoria,
   });
 
-  // CLAVE 1: Cambiar de StatelessWidget a StatefulWidget
   @override
   State<PerfilOverlay> createState() => _PerfilOverlayState();
 }
 
 class _PerfilOverlayState extends State<PerfilOverlay> {
-  // Variables locales que usaremos para mostrar los datos.
-  // Las inicializamos con los valores que nos pasa el widget, pero luego leerán las globales.
   late String _nombre;
   late String _avatarNombre;
-  // Solo incluimos las variables que el usuario puede editar.
 
   @override
   void initState() {
     super.initState();
-    // CLAVE 2: Inicializar las variables leyendo la memoria global.
+    // : Inicializar las variables leyendo la memoria global.
     // Esto asegura que al inicio, tiene el último valor conocido.
     _nombre = nombreJugador;
     _avatarNombre = avatarJugador;
   }
 
-  // CLAVE 3: Esta función se llama justo antes de que el Dialog se cierre.
+  //  Esta función se llama justo antes de que el Dialog se cierre.
   // Su único propósito es forzar el redibujado de este Overlay.
   void _forzarActualizacion() {
     setState(() {
@@ -66,7 +58,7 @@ class _PerfilOverlayState extends State<PerfilOverlay> {
   @override
   Widget build(BuildContext context) {
     // Usamos las variables de estado (_nombre, _avatarNombre, etc.)
-    // Los valores que no cambian (nivel, titulo, gemas) siguen usando widget.<nombre>
+
     return GestureDetector(
       onTap: widget.onClose,
       child: Container(
@@ -179,7 +171,7 @@ class _PerfilOverlayState extends State<PerfilOverlay> {
                           context: context,
                           builder: (context) => Dialog(
                             backgroundColor: Colors.transparent,
-                            // CLAVE 4: Ejecuta la función de actualización DESPUÉS de cerrar tu formulario.
+                            // Ejecuta la función de actualización DESPUÉS de cerrar  formulario.
                             child: InformacionPerfil(),
                           ),
                         ).then((_) {
