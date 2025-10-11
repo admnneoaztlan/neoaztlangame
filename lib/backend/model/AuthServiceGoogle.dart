@@ -2,13 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:neoaztlan/database/model/rules/guardarusuario.dart';
 
-Future<UserCredential?> login() async {
+Future<UserCredential?> authServiceGoogle() async {
   try {
     final GoogleSignInAccount? googleuser = await GoogleSignIn().signIn();
     if (googleuser == null) {
       print('El usuario canceló la autenticación o hubo un problema.');
       return null;
     }
+
     final GoogleSignInAuthentication googleAuth =
         await googleuser.authentication;
     final credential = GoogleAuthProvider.credential(

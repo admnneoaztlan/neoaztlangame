@@ -1,8 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:neoaztlan/database/AuthServiceGoogle.dart';
-import 'package:neoaztlan/screens/community_screen.dart';
+import 'package:neoaztlan/backend/model/AuthServiceGoogle.dart';
 import 'package:neoaztlan/screens/inicio.dart';
 
 class Google extends StatelessWidget {
@@ -15,7 +12,7 @@ class Google extends StatelessWidget {
 
     return GestureDetector(
       onTap: () async {
-        final UserCredential = await login();
+        final UserCredential = await authServiceGoogle();
         if (UserCredential != null) {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => Inicio()));

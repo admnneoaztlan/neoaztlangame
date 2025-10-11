@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:neoaztlan/backend/model/AuthServiceFacebook.dart';
+import 'package:neoaztlan/screens/inicio.dart';
 
 class Facebook extends StatelessWidget {
   const Facebook({super.key});
@@ -9,9 +11,12 @@ class Facebook extends StatelessWidget {
     const facebookIconUrl = 'assets/Facebook_icon.svg.png';
 
     return GestureDetector(
-      onTap: () {
-        // TODO: Implementar la lógica de autenticación de Facebook aquí.
-        print('Botón de Continuar con Facebook presionado.');
+      onTap: () async {
+        final UserCredential = await signInWithFacebook();
+        if (UserCredential != null) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Inicio()));
+        }
       },
       child: Container(
         height: 40,

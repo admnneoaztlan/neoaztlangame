@@ -1,5 +1,5 @@
 name: neoaztlan
-description: "A new Flutter project."
+description: ""
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -39,6 +39,10 @@ dependencies:
   cloud_firestore: ^6.0.1
   google_fonts: ^6.3.1
   google_sign_in: ^6.3.0
+  shared_preferences: ^2.0.6
+  flutter_meedu: "^4.2.0"
+  freezed: ^0.14.3
+  flutter_facebook_auth: ^7.1.2
 
 dev_dependencies:
   flutter_test:

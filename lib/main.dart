@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:neoaztlan/database/firebase_options.dart';
+import 'package:neoaztlan/backend/model/AuthWrapper.dart';
+import 'package:neoaztlan/database/firebase/firebase_options.dart';
 import 'package:neoaztlan/screens/viewLogin.dart';
 import 'screens/home_screen.dart';
 
@@ -18,7 +19,7 @@ class NeoaztlanApp extends StatelessWidget {
     return MaterialApp(
       title: 'Neoaztlan Game',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: Viewlogin(),
+      home: AuthWrapper(),
     );
   }
 }
