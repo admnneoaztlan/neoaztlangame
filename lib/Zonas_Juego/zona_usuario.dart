@@ -1,8 +1,8 @@
+import 'dart:math'; 
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:neoaztlan/Componentes/carta.dart';
 import 'package:neoaztlan/Componentes/avatar.dart';
-
 
 class ZonaUsuario extends PositionComponent {
   PositionComponent avatar = Avatar();
@@ -27,7 +27,7 @@ class ZonaUsuario extends PositionComponent {
 
   ZonaUsuario() : super(position: Vector2.zero(), size: Vector2(800, 600));
 
-  // Función auxiliar: Crea una carta de un tipo específico
+  // Función auxiliar
   Carta _crearCartaAleatoria(int index, Vector2? posicion) {
     switch (index % 4) {
       case 0:
@@ -56,10 +56,9 @@ class ZonaUsuario extends PositionComponent {
   }
 
   @override
-  // ignore: avoid_renaming_method_parameters
-  void onGameResize(Vector2 newSize) {
-    super.onGameResize(newSize);
-    size = newSize;
+  void onGameResize(Vector2 size) { 
+    super.onGameResize(size);
+    this.size = size;
     reacomodar();
   }
 
@@ -67,11 +66,9 @@ class ZonaUsuario extends PositionComponent {
   void _configurarAvatar() {
     avatar = Avatar();
     add(avatar);
-
     avatarText =
         _crearTexto('AVATAR', 0.06 * size.y, Colors.white, Anchor.center);
     add(avatarText);
-
     vidaText = _crearTexto('VIDA $vidaActual/$vidaMaxima', 0.08 * size.y,
         Colors.red, Anchor.topCenter);
     add(vidaText);
@@ -83,9 +80,8 @@ class ZonaUsuario extends PositionComponent {
       paint: Paint()..color = Colors.blue.shade900,
     );
     add(zonaArtefactos);
-
-    zonaArtefactosText = _crearTexto(
-        'ZONA DE ARTEFACTOS', 0.02 * size.y, Colors.cyan, Anchor.center);
+    zonaArtefactosText =
+        _crearTexto('ZONA DE ARTEFACTOS', 0.02 * size.y, Colors.cyan, Anchor.center);
     add(zonaArtefactosText);
   }
 
@@ -96,12 +92,11 @@ class ZonaUsuario extends PositionComponent {
       mazo.add(mazoCarta);
       add(mazoCarta);
     }
-    mazoText = _crearTexto('MAZO (${mazo.length} CARTAS)', 0.03 * size.y,
-        Colors.white, Anchor.topLeft);
+    mazoText = _crearTexto(
+        'MAZO (${mazo.length} CARTAS)', 0.03 * size.y, Colors.white, Anchor.topLeft);
     add(mazoText);
-
-    quedanCartasText = _crearTexto('QUEDAN ${mazo.length} cartas',
-        0.02 * size.y, Colors.white, Anchor.topLeft);
+    quedanCartasText = _crearTexto(
+        'QUEDAN ${mazo.length} cartas', 0.02 * size.y, Colors.white, Anchor.topLeft);
     add(quedanCartasText);
   }
 
@@ -109,7 +104,7 @@ class ZonaUsuario extends PositionComponent {
     cementerio.clear();
     for (int i = 0; i < 4; i++) {
       final cementerioCarta = _crearCartaAleatoria(i + 4, Vector2.zero());
-      cementerioCarta.voltear(); // Voltear para que muestre el color
+      cementerioCarta.voltear();
       cementerio.add(cementerioCarta);
       add(cementerioCarta);
     }
@@ -126,69 +121,83 @@ class ZonaUsuario extends PositionComponent {
       mano.add(manoCarta);
       add(manoCarta);
     }
-    manoText = _crearTexto('MANO (${mano.length} CARTAS)', 0.03 * size.y,
-        Colors.white, Anchor.topLeft);
+    manoText = _crearTexto(
+        'MANO (${mano.length} CARTAS)', 0.03 * size.y, Colors.white, Anchor.topLeft);
     add(manoText);
   }
 
-  // REACOMODO RESPONSIVE
+
+  // REACOMODO DE CARTAS 
+
   void reacomodar() {
     final zonaW = size.x;
     final zonaH = size.y;
     final esHorizontal = zonaW > zonaH;
 
-    // ÁREAS
+    // ÁREAS BASE
     final avatarArea =
         Rect.fromLTWH(zonaW * 0.05, zonaH * 0.05, zonaW * 0.20, zonaH * 0.25);
-
-    final artefactosArea = Rect.fromLTWH(zonaW * 0.05,
-        esHorizontal ? zonaH * 0.40 : zonaH * 0.35, zonaW * 0.40, zonaH * 0.20);
-
+    
+    // CEMENTERIO
+    final cementerioArea =
+        Rect.fromLTWH(zonaW * 0.45, zonaH * 0.15, zonaW * 0.12, zonaH * 0.25);
+    
     final mazoArea =
-        Rect.fromLTWH(zonaW * 0.60, zonaH * 0.50, zonaW * 0.10, zonaH * 0.2);
-
-    final cementerioArea = Rect.fromLTWH(zonaW * 0.20,
-        esHorizontal ? zonaH * 0.45 : zonaH * 0.1, zonaW * 0.30, zonaH * 0.25);
-
+        Rect.fromLTWH(zonaW * 0.80, zonaH * 0.45, zonaW * 0.12, zonaH * 0.25);
+    
+    final artefactosArea = Rect.fromLTWH(
+        zonaW * 0.05,
+        esHorizontal ? zonaH * 0.40 : zonaH * 0.35,
+        zonaW * 0.40,
+        zonaH * 0.20);
+    
     final manoArea =
-        Rect.fromLTWH(zonaW * 0.15, zonaH * 0.80, zonaW * 0.70, zonaH * 0.18);
+        Rect.fromLTWH(zonaW * 0.15, zonaH * 0.78, zonaW * 0.70, zonaH * 0.18);
 
-    // ELEMENTOS
-    // Avatar
+    // ELEMENTOS PRINCIPALES
     avatar.size = Vector2(avatarArea.width, avatarArea.height);
     avatar.position = Vector2(avatarArea.left, avatarArea.top);
     avatarText.position = _centrar(avatarArea, avatarText.size);
     vidaText.position =
         Vector2(avatarArea.center.dx, avatarArea.bottom + (zonaH * 0.02));
 
-    // Zona de artefactos
     zonaArtefactos.size = Vector2(artefactosArea.width, artefactosArea.height);
     zonaArtefactos.position = Vector2(artefactosArea.left, artefactosArea.top);
     zonaArtefactosText.position =
         _centrar(artefactosArea, zonaArtefactosText.size);
 
-    // Mazo
-    _acomodarCartas(mazo, mazoArea.left + zonaW * 0.02,
-        mazoArea.top + zonaH * 0.02, zonaW * 0.02, zonaH * 0.02);
+    // 🔹 MAZO
+    _acomodarCartasApiladas(
+      mazo,
+      Vector2(mazoArea.left + zonaW * 0.01, mazoArea.top + zonaH * 0.02),
+      offset: Vector2(2, 3),
+    );
     mazoText.position = Vector2(mazoArea.left, mazoArea.top - zonaH * 0.03);
     quedanCartasText.position =
         Vector2(mazoArea.left, mazoArea.bottom + zonaH * 0.01);
 
-    // Cementerio
-    _acomodarCartas(cementerio, cementerioArea.left + zonaW * 0.02,
-        cementerioArea.top + zonaH * 0.02, zonaW * 0.02, zonaH * 0.02);
+    // 🔹 CEMENTERIO
+    _acomodarCartasApiladas(
+      cementerio,
+      Vector2(cementerioArea.left + zonaW * 0.01, cementerioArea.top + zonaH * 0.02),
+      offset: Vector2(3, 2),
+      rotarAleatorio: true,
+    );
     cementerioText.position =
         Vector2(cementerioArea.left, cementerioArea.top - zonaH * 0.03);
 
-    // Mano
-    final spacing = manoArea.width / (mano.length + 1);
-    _acomodarCartasLinea(
-        mano, manoArea.left + spacing, manoArea.center.dy, spacing);
+    // 🔹 MANO: línea curva inferior
+    _acomodarCartasCurva(
+      mano,
+      centro: Vector2(manoArea.center.dx, manoArea.center.dy + zonaH * 0.02),
+      ancho: manoArea.width * 0.8,
+      amplitud: zonaH * 0.05,
+    );
     manoText.position =
         Vector2(manoArea.center.dx, manoArea.top - zonaH * 0.03);
   }
 
-  // HELPERS
+  // HELPERS DE TEXTO Y POSICIÓN
   TextComponent _crearTexto(
       String texto, double size, Color color, Anchor anchor) {
     return TextComponent(
@@ -205,21 +214,37 @@ class ZonaUsuario extends PositionComponent {
     );
   }
 
-  void _acomodarCartas(List<Carta> cartas, double startX, double startY,
-      double offsetX, double offsetY) {
+
+  // MÉTODOS DE ACOMODO
+
+  void _acomodarCartasApiladas(List<Carta> cartas, Vector2 inicio,
+      {Vector2? offset, bool rotarAleatorio = false}) {
+    offset ??= Vector2(2, 2);
     for (int i = 0; i < cartas.length; i++) {
-      cartas[i].position = Vector2(startX + i * offsetX, startY + i * offsetY);
+      final carta = cartas[i];
+      carta.position = inicio + Vector2(i * offset.x, i * offset.y);
+      if (rotarAleatorio) {
+        carta.angle = (i.isEven ? -0.05 : 0.05);
+      } else {
+        carta.angle = 0;
+      }
     }
   }
 
-  void _acomodarCartasLinea(
-      List<Carta> cartas, double startX, double y, double spacing) {
-    for (int i = 0; i < cartas.length; i++) {
-      cartas[i].position = Vector2(startX + i * spacing, y);
+  void _acomodarCartasCurva(List<Carta> cartas,
+      {required Vector2 centro, required double ancho, double amplitud = 40}) {
+    final n = cartas.length;
+    if (n == 0) return;
+    final espacio = ancho / (n - 1);
+    for (int i = 0; i < n; i++) {
+      final x = centro.x - ancho / 2 + i * espacio;
+      final y = centro.y + sin((i - (n - 1) / 2) * 0.4) * amplitud;
+      cartas[i].position = Vector2(x, y);
+      cartas[i].angle = ((i - (n - 1) / 2) * 0.05);
     }
   }
 
-  // ACTUALIZACIÓN METODOS
+  // ACTUALIZACIÓN MÉTODOS
   void actualizarVida(int nuevaVida) {
     vidaActual = nuevaVida.clamp(0, vidaMaxima);
     vidaText.text = 'VIDA $vidaActual/$vidaMaxima';
