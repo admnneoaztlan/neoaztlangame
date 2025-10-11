@@ -2,22 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:neoaztlan/backend/model/AuthServiceFacebook.dart';
 import 'package:neoaztlan/screens/inicio.dart';
 
-class Facebook extends StatelessWidget {
+class Facebook extends StatefulWidget {
   const Facebook({super.key});
 
   @override
+  State<Facebook> createState() => _FacebookState();
+}
+
+class _FacebookState extends State<Facebook> {
+  Future<void> _handleSignIn() async {
+    final UserCredential = await authServiceFacebook();
+
+    // 💥 CORRECCIÓN CLAVE: Verificar si el widget sigue en el árbol antes de navegar.
+    if (!mounted) return;
+
+    if (UserCredential != null) {
+      // Usar pushReplacement es mejor aquí para que el usuario no pueda
+      // regresar a la pantalla de login con el botón de atrás.
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Inicio()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const facebookIconUrl = 'assets/Facebook_icon.svg.png';
 
     return GestureDetector(
-      onTap: () async {
-        final UserCredential = await signInWithFacebook();
-        if (UserCredential != null) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Inicio()));
-        }
-      },
+      onTap: _handleSignIn,
       child: Container(
         height: 40,
         width: 240,

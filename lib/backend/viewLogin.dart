@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neoaztlan/backend/widgets/correo.dart';
 import 'package:neoaztlan/backend/widgets/facebook.dart';
 import 'package:neoaztlan/backend/widgets/google.dart';
 
@@ -16,9 +15,20 @@ class _ViewloginState extends State<Viewlogin> {
     return Scaffold(
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
+            const Text(
+              'Inicia Sesión en Neoaztlan',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 20),
+
             Facebook(),
+
+            const SizedBox(height: 10), // Espacio entre botones
+
             Google(),
           ],
         ),

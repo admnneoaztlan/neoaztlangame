@@ -2,26 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:neoaztlan/backend/model/AuthServiceGoogle.dart';
 import 'package:neoaztlan/screens/inicio.dart';
 
-class Google extends StatelessWidget {
+// Cambiamos a StatefulWidget para usar 'mounted'
+class Google extends StatefulWidget {
   const Google({super.key});
 
   @override
+  State<Google> createState() => _GoogleState();
+}
+
+class _GoogleState extends State<Google> {
+  // El método de manejo de tap ahora está dentro del State
+  Future<void> _handleSignIn() async {
+    final UserCredential = await authServiceGoogle();
+
+    // 💥 CORRECCIÓN CLAVE: Verificar si el widget sigue en el árbol antes de navegar.
+    if (!mounted) return;
+
+    if (UserCredential != null) {
+      // Usar pushReplacement es mejor aquí para que el usuario no pueda
+      // regresar a la pantalla de login con el botón de atrás.
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Inicio()));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // URL de un ícono de Google de dominio público para demostración.
-    const googleIconUrl = 'assets/Google__G__logo.svg.png';
+    // La URL googleIconUrl se usa solo en Image.asset,
+    // por lo que no es necesario aquí.
 
     return GestureDetector(
-      onTap: () async {
-        final UserCredential = await authServiceGoogle();
-        if (UserCredential != null) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Inicio()));
-        }
-      },
-      child: // Este es el widget del botón de Google
-          Container(
+      onTap: _handleSignIn, // Llama a la función asíncrona
+      child: Container(
         height: 40,
-        // Ajusta el ancho al espacio horizontal disponible
         width: 240,
         margin: const EdgeInsets.symmetric(horizontal: 16.0),
         decoration: BoxDecoration(
@@ -40,7 +53,8 @@ class Google extends StatelessWidget {
                 width: 20,
               ),
               const SizedBox(width: 10.0),
-              Text(
+              const Text(
+                // Se hizo const si no tiene variables dinámicas
                 'Sign in with Google',
                 style: TextStyle(
                   color: Colors.black,

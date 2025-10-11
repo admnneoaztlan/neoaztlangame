@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:neoaztlan/database/model/rules/guardarusuario.dart';
+import 'package:neoaztlan/backend/model/rules/guardarNuevoUsuario.dart';
 
 Future<UserCredential?> authServiceGoogle() async {
   try {
@@ -18,7 +18,7 @@ Future<UserCredential?> authServiceGoogle() async {
         await FirebaseAuth.instance.signInWithCredential(credential);
 
     if (userCredential.user != null) {
-      await guardarUsuario(userCredential.user!);
+      await guardarNuevoUsuario(userCredential.user!);
     }
     return userCredential;
   } catch (e) {

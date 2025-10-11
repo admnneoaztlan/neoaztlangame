@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:neoaztlan/backend/model/cerrarSesion.dart';
 
-class Correo extends StatelessWidget {
-  const Correo({super.key});
+class Exit extends StatelessWidget {
+  const Exit({super.key});
 
-  @override
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // TODO: Implementar la lógica de autenticación de correo aquí.
-        print('Botón de Correo electrónico presionado.');
+        cerrarSesion();
       },
       child: Container(
         height: 40,
@@ -26,13 +25,13 @@ class Correo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(
-                Icons.email,
+                Icons.exit_to_app,
                 color: Colors.black,
                 size: 24,
               ),
               const SizedBox(width: 10.0),
               const Text(
-                'Correo electronico',
+                'Cerrar secion',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16,

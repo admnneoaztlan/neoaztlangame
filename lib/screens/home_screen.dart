@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:neoaztlan/backend/widgets/correo.dart';
-import 'package:neoaztlan/backend/widgets/facebook.dart';
-import 'package:neoaztlan/backend/widgets/google.dart';
+import 'package:neoaztlan/backend/widgets/UserInfoDisplay%20.dart';
+import 'package:neoaztlan/backend/widgets/UserNameDisplay.dart';
+import 'package:neoaztlan/backend/widgets/exit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {},
               child: const Text('¡A construir!'),
             ),
+            UserNameDisplay(),
+            UserInfoDisplay(),
+            Exit()
           ],
         ),
       ),

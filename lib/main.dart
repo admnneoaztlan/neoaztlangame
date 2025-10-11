@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:neoaztlan/backend/model/AuthWrapper.dart';
+import 'package:neoaztlan/backend/AuthWrapper.dart';
 import 'package:neoaztlan/database/firebase/firebase_options.dart';
-import 'package:neoaztlan/screens/viewLogin.dart';
+import 'package:neoaztlan/backend/viewLogin.dart';
 import 'screens/home_screen.dart';
 
 Future<void> main() async {

@@ -1,11 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:neoaztlan/screens/inicio.dart';
-import 'package:neoaztlan/screens/viewLogin.dart'; // Tu pantalla de login
+import 'package:neoaztlan/backend/viewLogin.dart'; // Tu pantalla de login
 
-class AuthWrapper extends StatelessWidget {
+class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
 
+  @override
+  State<AuthWrapper> createState() => _AuthWrapperState();
+}
+
+class _AuthWrapperState extends State<AuthWrapper> {
   @override
   Widget build(BuildContext context) {
     // Escucha los cambios en el estado de autenticación de Firebase.

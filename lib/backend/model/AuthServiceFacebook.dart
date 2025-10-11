@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:neoaztlan/database/model/rules/guardarusuario.dart';
+import 'package:neoaztlan/backend/model/rules/guardarNuevoUsuario.dart';
 
-Future<UserCredential?> signInWithFacebook() async {
+Future<UserCredential?> authServiceFacebook() async {
   try {
     // 1. Iniciar el flujo de login de Facebook y solicitar permisos
     final LoginResult result = await FacebookAuth.instance.login(
@@ -34,7 +31,7 @@ Future<UserCredential?> signInWithFacebook() async {
       // (Opcional) Si quieres obtener datos adicionales de Facebook, puedes usar:
       // final userData = await FacebookAuth.instance.getUserData();
       if (userCredential.user != null) {
-        await guardarUsuario(userCredential.user!);
+        await guardarNuevoUsuario(userCredential.user!);
       }
       print(
           "Usuario logueado en Firebase vía Facebook: ${userCredential.user?.email}");
