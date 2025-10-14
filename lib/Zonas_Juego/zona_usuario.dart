@@ -1,4 +1,4 @@
-import 'dart:math'; 
+import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:neoaztlan/Componentes/carta.dart';
@@ -18,6 +18,9 @@ class ZonaUsuario extends PositionComponent {
 
   List<Carta> cementerio = [];
   TextComponent cementerioText = TextComponent();
+  
+  // almacenar los overlays grises
+  List<RectangleComponent> overlaysGrises = [];
 
   List<Carta> mano = [];
   TextComponent manoText = TextComponent();
@@ -27,7 +30,6 @@ class ZonaUsuario extends PositionComponent {
 
   ZonaUsuario() : super(position: Vector2.zero(), size: Vector2(800, 600));
 
-  // Función auxiliar
   Carta _crearCartaAleatoria(int index, Vector2? posicion) {
     switch (index % 4) {
       case 0:
@@ -43,7 +45,6 @@ class ZonaUsuario extends PositionComponent {
     }
   }
 
-  // CARGA INICIAL
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -56,13 +57,12 @@ class ZonaUsuario extends PositionComponent {
   }
 
   @override
-  void onGameResize(Vector2 size) { 
+  void onGameResize(Vector2 size) {
     super.onGameResize(size);
     this.size = size;
     reacomodar();
   }
 
-  // CONFIGURACIÓN DE ELEMENTOS
   void _configurarAvatar() {
     avatar = Avatar();
     add(avatar);
@@ -102,11 +102,20 @@ class ZonaUsuario extends PositionComponent {
 
   void _configurarCementerio() {
     cementerio.clear();
+    // Limpiar overlays 
+    for (final overlay in overlaysGrises) {
+      overlay.removeFromParent();
+    }
+    overlaysGrises.clear();
+    
     for (int i = 0; i < 4; i++) {
       final cementerioCarta = _crearCartaAleatoria(i + 4, Vector2.zero());
       cementerioCarta.voltear();
       cementerio.add(cementerioCarta);
       add(cementerioCarta);
+      
+      // overlay gris más fuerte 
+      _crearOverlayGris(cementerioCarta);
     }
     cementerioText =
         _crearTexto('CEMENTERIO', 0.03 * size.y, Colors.white, Anchor.topLeft);
@@ -126,19 +135,14 @@ class ZonaUsuario extends PositionComponent {
     add(manoText);
   }
 
-
-  // REACOMODO DE CARTAS 
-
   void reacomodar() {
     final zonaW = size.x;
     final zonaH = size.y;
     final esHorizontal = zonaW > zonaH;
 
-    // ÁREAS BASE
     final avatarArea =
         Rect.fromLTWH(zonaW * 0.05, zonaH * 0.05, zonaW * 0.20, zonaH * 0.25);
     
-    // CEMENTERIO
     final cementerioArea =
         Rect.fromLTWH(zonaW * 0.45, zonaH * 0.15, zonaW * 0.12, zonaH * 0.25);
     
@@ -166,7 +170,7 @@ class ZonaUsuario extends PositionComponent {
     zonaArtefactosText.position =
         _centrar(artefactosArea, zonaArtefactosText.size);
 
-    // 🔹 MAZO
+    // MAZO
     _acomodarCartasApiladas(
       mazo,
       Vector2(mazoArea.left + zonaW * 0.01, mazoArea.top + zonaH * 0.02),
@@ -176,7 +180,7 @@ class ZonaUsuario extends PositionComponent {
     quedanCartasText.position =
         Vector2(mazoArea.left, mazoArea.bottom + zonaH * 0.01);
 
-    // 🔹 CEMENTERIO
+    // CEMENTERIO
     _acomodarCartasApiladas(
       cementerio,
       Vector2(cementerioArea.left + zonaW * 0.01, cementerioArea.top + zonaH * 0.02),
@@ -185,8 +189,11 @@ class ZonaUsuario extends PositionComponent {
     );
     cementerioText.position =
         Vector2(cementerioArea.left, cementerioArea.top - zonaH * 0.03);
+        
+    // posición de los overlays grises
+    _actualizarOverlaysGrises();
 
-    // 🔹 MANO: línea curva inferior
+    // MANO
     _acomodarCartasCurva(
       mano,
       centro: Vector2(manoArea.center.dx, manoArea.center.dy + zonaH * 0.02),
@@ -197,7 +204,6 @@ class ZonaUsuario extends PositionComponent {
         Vector2(manoArea.center.dx, manoArea.top - zonaH * 0.03);
   }
 
-  // HELPERS DE TEXTO Y POSICIÓN
   TextComponent _crearTexto(
       String texto, double size, Color color, Anchor anchor) {
     return TextComponent(
@@ -213,9 +219,6 @@ class ZonaUsuario extends PositionComponent {
       area.top + (area.height - sizeElemento.y) / 2,
     );
   }
-
-
-  // MÉTODOS DE ACOMODO
 
   void _acomodarCartasApiladas(List<Carta> cartas, Vector2 inicio,
       {Vector2? offset, bool rotarAleatorio = false}) {
@@ -244,7 +247,89 @@ class ZonaUsuario extends PositionComponent {
     }
   }
 
-  // ACTUALIZACIÓN MÉTODOS
+  // OVERLAYS GRISES
+  void _crearOverlayGris(Carta carta) {
+    // Crear un overlay más oscuro y con mejor efecto de escala de grises
+    final overlay = RectangleComponent(
+      size: carta.size,
+      position: carta.position.clone(),
+      anchor: carta.anchor,
+      paint: Paint()
+        ..color = Colors.grey.withOpacity(0.8) //opaco
+        ..blendMode = BlendMode.saturation, // efecto de escala de grises
+    );
+    
+    // overlay sigue a la carta
+    overlay.position = carta.position.clone();
+    overlay.angle = carta.angle;
+    
+    add(overlay);
+    overlaysGrises.add(overlay);
+    
+    // segundo overlay para efecto más intenso
+    final overlayIntenso = RectangleComponent(
+      size: carta.size,
+      position: carta.position.clone(),
+      anchor: carta.anchor,
+      paint: Paint()
+        ..color = Colors.black.withOpacity(0.3) // Overlay oscuro adicional
+        ..blendMode = BlendMode.multiply,
+    );
+    
+    overlayIntenso.position = carta.position.clone();
+    overlayIntenso.angle = carta.angle;
+    
+    add(overlayIntenso);
+    overlaysGrises.add(overlayIntenso);
+  }
+
+  void _actualizarOverlaysGrises() {
+    for (int i = 0; i < cementerio.length; i++) {
+      final carta = cementerio[i];
+      final indexBase = i * 2; // cada carta tiene 2 overlays
+      
+      if (indexBase < overlaysGrises.length - 1) {
+        final overlay1 = overlaysGrises[indexBase];
+        final overlay2 = overlaysGrises[indexBase + 1];
+        
+        overlay1.position = carta.position.clone();
+        overlay1.angle = carta.angle;
+        overlay1.size = carta.size;
+        
+        overlay2.position = carta.position.clone();
+        overlay2.angle = carta.angle;
+        overlay2.size = carta.size;
+      }
+    }
+  }
+
+
+  // AGREGAR CARTAS AL CEMENTERIO
+
+  void agregarAlCementerio(Carta carta) {
+    carta.voltear();
+    cementerio.add(carta);
+    add(carta);
+    _crearOverlayGris(carta);
+    reacomodar();
+  }
+
+
+  //LIMPIAR CEMENTERIO
+
+  void limpiarCementerio() {
+    for (final carta in cementerio) {
+      carta.removeFromParent();
+    }
+    for (final overlay in overlaysGrises) {
+      overlay.removeFromParent();
+    }
+    cementerio.clear();
+    overlaysGrises.clear();
+    reacomodar();
+  }
+
+  // MÉTODOS
   void actualizarVida(int nuevaVida) {
     vidaActual = nuevaVida.clamp(0, vidaMaxima);
     vidaText.text = 'VIDA $vidaActual/$vidaMaxima';
