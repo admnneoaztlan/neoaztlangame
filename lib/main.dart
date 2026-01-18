@@ -1,71 +1,64 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
-import 'screens/neodex_screen.dart';
-import 'screens/play_screen.dart';
-import 'screens/community_screen.dart';
-import 'screens/shop_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Importa las nuevas pantallas de flujo (debes crearlas en lib/UI/)
+import 'package:neoaztlan/UI/menu_screen.dart';
+import 'package:neoaztlan/UI/partida_screen.dart';
+import 'package:neoaztlan/UI/resultados_screen.dart';
+
+import 'package:neoaztlan/UI/login_screen.dart';
 
 void main() {
-  runApp(NeoaztlanApp());
+  runApp(
+    // Riverpod debe envolver la aplicación para acceso global al estado
+    const ProviderScope(
+      child: NeoaztlanApp(),
+    ),
+  );
 }
 
 class NeoaztlanApp extends StatelessWidget {
+  const NeoaztlanApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Neoaztlan Game',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: MainNavigation(),
+      debugShowCheckedModeBanner: false,
+      title: 'Neoaztlan',
+      theme: ThemeData.dark().copyWith(
+        primaryColor: const Color(0xFF00B3B3),
+        scaffoldBackgroundColor: Colors.black,
+      ),
+
+      // La aplicación inicia en el Menú (o puedes cambiar a '/login')
+      initialRoute: '/menu',
+
+      // Definición de las Rutas de Navegación
+      routes: {
+        '/login': (context) => const LoginScreen(),
+        '/menu': (context) => const MenuScreen(),
+        '/partida': (context) => const PartidaScreen(),
+        // Nota: Los resultados deben pasarse por argumentos si los datos son dinámicos.
+        '/resultados': (context) => const ResultadosScreen(victoria: true, gemasGanadas: 100),
+      },
     );
   }
 }
 
-class MainNavigation extends StatefulWidget {
-  @override
-  _MainNavigationState createState() => _MainNavigationState();
-}
-
-class _MainNavigationState extends State<MainNavigation> {
-  int _currentIndex = 0;
-
-  final List<Widget> _screens = [
-    HomeScreen(),
-    NeoDexScreen(),
-    PlayScreen(),
-    CommunityScreen(),
-    ShopScreen(),
-  ];
-
+// --- PLACEHOLDER: lib/UI/login_screen.dart ---
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blueAccent,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.auto_stories),
-            label: 'NeoDex',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.videogame_asset),
-            label: 'Jugar',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Comunidad'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Tienda',
-          ),
-        ],
+      backgroundColor: Colors.black,
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Simular Login exitoso y navegar al Menú
+            Navigator.of(context).pushReplacementNamed('/menu');
+          },
+          child: const Text('Acceder al Neoaztlan (Simulado)'),
+        ),
       ),
     );
   }
