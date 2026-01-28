@@ -6,9 +6,12 @@ import 'package:neoaztlan/UI/gems_display.dart';
 import 'package:neoaztlan/UI/healt_bar.dart';
 import 'package:neoaztlan/UI/overlay_perfil.dart';
 
-final playscreen = Playscreen();
+// BORRAMOS LA LÍNEA QUE ESTABA AQUÍ (final playscreen...)
+
 class PartidaScreen extends StatelessWidget {
   const PartidaScreen({super.key});
+
+  // El mapa de overlays está bien aquí
   Map<String, Widget Function(BuildContext, Playscreen)> get _overlayBuilderMap => {
     'perfilOverlay': (context, game)=> PerfilOverlay(
       onClose: ()=> game.overlays.remove('perfilOverlay'),
@@ -28,13 +31,16 @@ class PartidaScreen extends StatelessWidget {
         ),
       ),
     ),
-
   };
 
   @override
   Widget build (BuildContext context){
+    // ¡AQUÍ ES DONDE DEBE IR!
+    // Creamos una NUEVA partida cada vez que se construye la pantalla.
+    final playscreen = Playscreen();
+
     return Scaffold(
-      body: GameWidget <Playscreen>(
+      body: GameWidget<Playscreen>(
         game: playscreen,
         overlayBuilderMap: _overlayBuilderMap,
         initialActiveOverlays: const ['hud'],

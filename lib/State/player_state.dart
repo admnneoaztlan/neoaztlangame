@@ -101,6 +101,23 @@ class PlayerData{
   void updateGems(int newGems){
     state = state.copyWith(gemas: newGems);
   }
+
+  void logout() {
+    state = PlayerData(
+      nombre: '',
+      avatarNombre: '',
+      correo: '',
+      nacionalidad: '',
+      notificacionesActivas: false,
+      vidaActual: 0,
+      vidaMaxima: 0,
+      nivel: 0,
+      gemas: 0,
+      estrellas: 0,
+      victorias: 0,
+      tasaVictoria: 0.0,
+    );
+  }
 }
 
 final PlayerProvider = StateNotifierProvider<PlayerNotifier, PlayerData>(

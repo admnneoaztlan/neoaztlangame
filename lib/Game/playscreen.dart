@@ -10,20 +10,24 @@ import 'package:neoaztlan/Zonas_Juego/zona_batalla.dart';
 class Playscreen extends FlameGame {
   Playscreen()
       : super(
-          camera: CameraComponent.withFixedResolution(
-            width: 1080,
-            height: 1920,
-          ),
-        );
+    camera: CameraComponent.withFixedResolution(
+      width: 1080,
+      height: 1920,
+    ),
+  );
 
-  // Inicializar Zonas de juego
-  final ZonaOponente zona1=ZonaOponente();
-  final ZonaBatalla  zona2=ZonaBatalla();
-  final ZonaUsuario  zona3=ZonaUsuario();
-
+  // Inicializar Zonas de juego públicas para que las cartas puedan verlas
+  late final ZonaOponente zona1;
+  late final ZonaBatalla  zona2;
+  late final ZonaUsuario  zona3;
 
   @override
   Future<void> onLoad() async {
+    // Instanciamos aquí para asegurar orden
+    zona1 = ZonaOponente();
+    zona2 = ZonaBatalla();
+    zona3 = ZonaUsuario();
+
     add(zona1);
     add(zona2);
     add(zona3);
@@ -35,19 +39,18 @@ class Playscreen extends FlameGame {
 
     final isPortrait = size.y > size.x;
 
-     if (isPortrait) {
-      // Horizontal
-      //Medira 3/8
+    if (isPortrait) {
+      // Pantalla Vertical
       zona1.position = Vector2(0, 0);
-      zona1.size = Vector2(size.x,3*size.y/8);
-      //Medira 2/8
+      zona1.size = Vector2(size.x, 3*size.y/8);
+
       zona2.position = Vector2(0, zona1.size.y);
-      zona2.size = Vector2(size.x,2*size.y/8);
-      //Medira 3/8
+      zona2.size = Vector2(size.x, 2*size.y/8);
+
       zona3.position = Vector2(0, zona1.size.y+zona2.size.y);
-      zona3.size = Vector2(size.x,3*size.y/8);
+      zona3.size = Vector2(size.x, 3*size.y/8);
     } else {
-      // Vertical con las mismas medidas
+      // Pantalla Horizontal
       zona1.position = Vector2(0, 0);
       zona1.size = Vector2(3*size.x/8, size.y);
 
@@ -59,8 +62,9 @@ class Playscreen extends FlameGame {
     }
 
     // Se reacomodan los elementos dentro de cada zona
-    zona1.reacomodar();
-    zona2.reacomodar();
-    zona3.reacomodar();
+    // Verificamos si están montadas (isMounted) para evitar errores al inicio
+    if (zona1.isMounted) zona1.reacomodar();
+    if (zona2.isMounted) zona2.reacomodar();
+    if (zona3.isMounted) zona3.reacomodar();
   }
 }

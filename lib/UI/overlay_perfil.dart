@@ -94,6 +94,33 @@ class PerfilOverlay extends ConsumerWidget {
                       const Text('Toca fuera para cerrar', style: TextStyle(color: Colors.white54, fontSize: 10)),
                     ],
                   ),
+                  const SizedBox(height: 25,),
+                  SizedBox(
+                    width: double.infinity, // Que ocupe el ancho disponible
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Colors.redAccent, width: 1.5),
+                        foregroundColor: Colors.redAccent,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      onPressed: () {
+                        // 1. Limpiamos los datos del jugador en Riverpod
+                        ref.read(PlayerProvider.notifier).logout();
+
+                        // 2. Navegamos al Login y borramos todo el historial (Seguridad)
+                        Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+                      },
+                      icon: const Icon(Icons.logout_rounded),
+                      label: const Text(
+                        'CERRAR SESIÓN',
+                        style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+                  const Text('Toca fuera para cerrar', style: TextStyle(color: Colors.white54, fontSize: 10)),
 
                   Positioned(
                     bottom: 0,
@@ -156,4 +183,6 @@ class PerfilOverlay extends ConsumerWidget {
       ),
     );
   }
+
+
 }
